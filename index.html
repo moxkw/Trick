@@ -1,160 +1,266 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Skate Trick Random</title>
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>Skate Slot Pro</title>
 
 <style>
-    * { box-sizing: border-box; }
+*{
+    box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
+}
 
-   * {
-    -webkit-tap-highlight-color: transparent;
-   }
+body{
+    margin:0;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-family:system-ui,-apple-system,sans-serif;
+    background:
+        radial-gradient(circle at top, rgba(0,255,180,.18), transparent 40%),
+        radial-gradient(circle at bottom, rgba(0,120,255,.15), transparent 45%),
+        linear-gradient(180deg,#050505,#000);
+    color:#dfffee;
+    overscroll-behavior:none;
+}
 
-   button {
-       touch-action: manipulation;
-   }
+/* NOISE */
+body::after{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    background:repeating-radial-gradient(
+        circle at 0 0,
+        rgba(255,255,255,.04),
+        rgba(255,255,255,.04) 1px,
+        transparent 1px,
+        transparent 3px
+    );
+    opacity:.06;
+}
 
-   
-    body {
-        margin: 0;
-        min-height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background: radial-gradient(circle at top, #0f0f0f, #000);
-        font-family: system-ui, sans-serif;
-        color: #fff;
-    }
+.app{
+    width:92%;
+    max-width:420px;
+    display:flex;
+    gap:18px;
+}
 
-    .app {
-        width: 90%;
-        max-width: 400px;
-        background: linear-gradient(180deg, #111, #050505);
-        border-radius: 24px;
-        padding: 24px;
-        text-align: center;
-        box-shadow: 0 0 30px rgba(0,255,120,0.15);
-    }
+/* SLOT */
+.slot-box{
+    flex:1;
+    background:rgba(10,10,10,.85);
+    border-radius:26px;
+    padding:22px 18px;
+    text-align:center;
+    box-shadow:
+        0 0 0 1px rgba(0,255,150,.15),
+        0 20px 40px rgba(0,0,0,.8),
+        inset 0 0 30px rgba(0,255,150,.08);
+}
 
-    h2 {
-        margin: 0;
-        font-size: 24px;
-        color: #00ff88;
-        text-shadow: 0 0 10px rgba(0,255,136,0.6);
-        letter-spacing: 1px;
-    }
+h2{
+    margin:0;
+    letter-spacing:2px;
+    color:#7dffbf;
+    text-shadow:0 0 14px rgba(0,255,136,.8);
+}
 
-    .sub {
-        margin-top: 6px;
-        font-size: 13px;
-        color: #777;
-    }
+.sub{
+    margin-top:6px;
+    font-size:16px;
+    color:#9affd0;
+    opacity:.85;
+}
 
-    button {
-        margin-top: 22px;
-        width: 100%;
-        padding: 16px;
-        font-size: 18px;
-        font-weight: bold;
-        letter-spacing: 2px;
-        border: none;
-        border-radius: 16px;
-        background: linear-gradient(135deg, #00ff88, #00c853);
-        color: #000;
-        cursor: pointer;
-        box-shadow: 0 8px 20px rgba(0,255,136,0.4);
-    }
+.slot{
+    margin-top:22px;
+    background:#000;
+    border-radius:18px;
+    border:1px solid rgba(0,255,136,.4);
+    overflow:hidden;
+    box-shadow:inset 0 0 22px rgba(0,0,0,.9);
+}
 
-    button:active {
-        transform: scale(0.96);
-    }
+.reel{
+    height:70px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:22px;
+    border-bottom:1px solid rgba(0,255,136,.3);
+}
 
-    .result {
-        margin-top: 24px;
-        padding: 20px;
-        border-radius: 20px;
-        background: #000;
-        border: 1px solid rgba(0,255,136,0.3);
-        box-shadow: inset 0 0 15px rgba(0,0,0,0.9);
-    }
+.reel:last-child{border:none}
 
-    .trick {
-        font-size: 22px;
-        padding: 10px 0;
-        text-shadow: 0 0 8px rgba(0,255,136,0.4);
-    }
+/* LEVER */
+.lever-box{
+    width:80px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
 
-    .divider {
-        height: 1px;
-        margin: 10px 0;
-        background: linear-gradient(to right, transparent, #00ff88, transparent);
-    }
+.lever-track{
+    position:relative;
+    width:18px;
+    height:240px;
+    background:#111;
+    border-radius:12px;
+    box-shadow:inset 0 0 12px rgba(0,0,0,.9);
+}
+
+.hint{
+    position:absolute;
+    top:-30px;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:22px;
+    opacity:.7;
+    animation:pulse 1.2s infinite;
+}
+
+@keyframes pulse{
+    0%{transform:translateX(-50%) scale(1);opacity:.6}
+    50%{transform:translateX(-50%) scale(1.2);opacity:1}
+    100%{transform:translateX(-50%) scale(1);opacity:.6}
+}
+
+.lever{
+    position:absolute;
+    top:0;
+    left:50%;
+    transform:translateX(-50%);
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    background:radial-gradient(circle at top,#00ff88,#00c853);
+    box-shadow:0 0 18px rgba(0,255,136,.9);
+    touch-action:none;
+}
 </style>
 </head>
 
 <body>
 
 <div class="app">
-    <h2>SKATE TRICK</h2>
 
-    <div class="sub">✿N Bʘ@πD</div>
+<div class="slot-box">
+    <h2>🎰 SKATE SLOT 🛹</h2>
+    <div class="sub">⚡ DRAG TO SPIN • NO REPEAT 🔥</div>
 
-    <button onclick="randomTwo()">RANDOM</button>
-
-    <div class="result" id="result">
-        READY
+    <div class="slot">
+        <div class="reel" id="reel1">🎲 READY</div>
+        <div class="reel" id="reel2">🎲 READY</div>
     </div>
 </div>
 
+<div class="lever-box">
+    <div class="lever-track">
+        <div class="hint">⬇️</div>
+        <div class="lever" id="lever"></div>
+    </div>
+</div>
+
+</div>
+
 <script>
-const tricks = [
-    "Ollie","Fakie ollie","Front side 180","Half cab",
-    "Fakie front side 180","Body varial revert fs",
-    "Body varial revert bs","Push and jump revert",
-    "Step off body varial","Step off revert front side",
-    "Step off revert back side","360 kickturn",
-    "No comply finger flip","Fakie No comply finger flip","No comply 180",
-    "Pop shuv","Fakie pop shuv","No com shuv",
-    "Power slide fs","Power slide bs",
-    "Cave shuv","Cave","Boneless",
-    "Manual","Fakie manual"
+/* ===== DATA ===== */
+const tricks=[
+"Ollie","Fakie ollie","Front side 180","Half cab",
+"Fakie front side 180","Body varial revert fs",
+"Body varial revert bs","Push and jump revert",
+"Step off body varial","Step off revert front side",
+"Step off revert back side","360 kickturn",
+"No comply finger flip","Fakie no comply finger flip",
+"No comply 180","Pop shuv","Fakie pop shuv","No com shuv",
+"Power slide fs","Power slide bs",
+"Cave shuv","Cave","Boneless",
+"Manual","Fakie manual"
 ];
 
-const MAX_HISTORY = 100;
-let history = [];
+const MAX_HISTORY=100;
+let history=[];
+let spinning=false;
 
-function randomTwo() {
-    let pair;
-
-    do {
-        let i1 = Math.floor(Math.random() * tricks.length);
-        let i2;
-        do {
-            i2 = Math.floor(Math.random() * tricks.length);
-        } while (i1 === i2);
-
-        pair = [tricks[i1], tricks[i2]].sort().join("||");
-
-    } while (history.includes(pair));
-
-    history.push(pair);
-    if (history.length > MAX_HISTORY) history.shift();
-
-    const [top, bottom] = pair.split("||");
-
-    document.getElementById("result").innerHTML = `
-        <div class="trick">${top}</div>
-        <div class="divider"></div>
-        <div class="trick">${bottom}</div>
-    `;
+/* AUDIO */
+const audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+function clack(){
+    const o=audioCtx.createOscillator();
+    const g=audioCtx.createGain();
+    o.type="square";
+    o.frequency.value=900;
+    g.gain.setValueAtTime(.18,audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(.01,audioCtx.currentTime+.07);
+    o.connect(g);g.connect(audioCtx.destination);
+    o.start();o.stop(audioCtx.currentTime+.07);
 }
+
+/* SPIN */
+function spin(){
+    if(spinning) return;
+    spinning=true;
+    navigator.vibrate?.([20,30,20]);
+
+    const r1=reel1,r2=reel2;
+
+    const t1=setInterval(()=>{
+        r1.textContent=tricks[Math.random()*tricks.length|0];
+        clack();
+    },80);
+
+    const t2=setInterval(()=>{
+        r2.textContent=tricks[Math.random()*tricks.length|0];
+    },80);
+
+    setTimeout(()=>clearInterval(t1),800);
+    setTimeout(()=>{
+        clearInterval(t2);
+
+        let pair;
+        do{
+            let a=Math.random()*tricks.length|0,b;
+            do{b=Math.random()*tricks.length|0}while(a===b);
+            pair=[tricks[a],tricks[b]].sort().join("||");
+        }while(history.includes(pair));
+
+        history.push(pair);
+        if(history.length>MAX_HISTORY)history.shift();
+
+        [r1.textContent,r2.textContent]=pair.split("||");
+        spinning=false;
+    },1300);
+}
+
+/* LEVER DRAG */
+const lever=document.getElementById("lever");
+let startY=0,drag=false;
+
+lever.addEventListener("pointerdown",e=>{
+    if(spinning) return;
+    drag=true;
+    startY=e.clientY;
+    lever.setPointerCapture(e.pointerId);
+});
+
+lever.addEventListener("pointermove",e=>{
+    if(!drag) return;
+    const y=Math.min(Math.max(e.clientY-startY,0),180);
+    lever.style.top=y+"px";
+});
+
+lever.addEventListener("pointerup",()=>{
+    if(!drag) return;
+    drag=false;
+    if(parseInt(lever.style.top)>120) spin();
+    lever.style.top="0";
+});
 </script>
 
 </body>
 </html>
-
-
-
