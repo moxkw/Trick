@@ -4,13 +4,33 @@
 <meta charset="UTF-8">
 <meta name="viewport"
 content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<!-- PWA / iOS Fullscreen -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Skate Slot">
+
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#00ff88">
+
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon_180x180.png">
 
 <title>Skate Slot Pro</title>
 
 <style>
+button, .spin-btn {
+  touch-action: manipulation;
+}
+
+button {
+  font-size: 16px;
+}
+
+
 *{
     box-sizing:border-box;
     -webkit-tap-highlight-color:transparent;
+    touch-action:manipulation;
 }
 
 body{
@@ -25,35 +45,14 @@ body{
         radial-gradient(circle at bottom, rgba(0,120,255,.15), transparent 45%),
         linear-gradient(180deg,#050505,#000);
     color:#dfffee;
-    overscroll-behavior:none;
-}
-
-/* NOISE */
-body::after{
-    content:"";
-    position:fixed;
-    inset:0;
-    pointer-events:none;
-    background:repeating-radial-gradient(
-        circle at 0 0,
-        rgba(255,255,255,.04),
-        rgba(255,255,255,.04) 1px,
-        transparent 1px,
-        transparent 3px
-    );
-    opacity:.06;
 }
 
 .app{
     width:92%;
     max-width:420px;
-    display:flex;
-    gap:18px;
 }
 
-/* SLOT */
 .slot-box{
-    flex:1;
     background:rgba(10,10,10,.85);
     border-radius:26px;
     padding:22px 18px;
@@ -72,14 +71,13 @@ h2{
 }
 
 .sub{
-    margin-top:6px;
-    font-size:16px;
+    margin:8px 0 16px;
+    font-size:15px;
     color:#9affd0;
     opacity:.85;
 }
 
 .slot{
-    margin-top:22px;
     background:#000;
     border-radius:18px;
     border:1px solid rgba(0,255,136,.4);
@@ -98,50 +96,40 @@ h2{
 
 .reel:last-child{border:none}
 
-/* LEVER */
-.lever-box{
-    width:80px;
-    display:flex;
-    justify-content:center;
-    align-items:center;
+/* FLASH */
+.slot.flash{
+    animation:flash .35s ease-out;
 }
 
-.lever-track{
-    position:relative;
-    width:18px;
-    height:240px;
-    background:#111;
-    border-radius:12px;
-    box-shadow:inset 0 0 12px rgba(0,0,0,.9);
+@keyframes flash{
+    0%{box-shadow:0 0 0 rgba(0,255,136,0)}
+    50%{box-shadow:0 0 40px rgba(0,255,136,1)}
+    100%{box-shadow:0 0 0 rgba(0,255,136,0)}
 }
 
-.hint{
-    position:absolute;
-    top:-30px;
-    left:50%;
-    transform:translateX(-50%);
-    font-size:22px;
-    opacity:.7;
-    animation:pulse 1.2s infinite;
+/* BUTTON */
+.spin-btn{
+    margin-top:18px;
+    width:100%;
+    height:56px;
+    font-size:20px;
+    font-weight:700;
+    letter-spacing:2px;
+    border:none;
+    border-radius:16px;
+    background:
+        linear-gradient(180deg,#00ff9c,#00c853);
+    color:#003b22;
+    box-shadow:
+        0 8px 20px rgba(0,255,136,.6),
+        inset 0 -3px 0 rgba(0,0,0,.35);
 }
 
-@keyframes pulse{
-    0%{transform:translateX(-50%) scale(1);opacity:.6}
-    50%{transform:translateX(-50%) scale(1.2);opacity:1}
-    100%{transform:translateX(-50%) scale(1);opacity:.6}
-}
-
-.lever{
-    position:absolute;
-    top:0;
-    left:50%;
-    transform:translateX(-50%);
-    width:38px;
-    height:38px;
-    border-radius:50%;
-    background:radial-gradient(circle at top,#00ff88,#00c853);
-    box-shadow:0 0 18px rgba(0,255,136,.9);
-    touch-action:none;
+.spin-btn:active{
+    transform:translateY(2px);
+    box-shadow:
+        0 4px 12px rgba(0,255,136,.5),
+        inset 0 -1px 0 rgba(0,0,0,.4);
 }
 </style>
 </head>
@@ -149,34 +137,27 @@ h2{
 <body>
 
 <div class="app">
+    <div class="slot-box">
+        <h2>🎰 SKATE SLOT 🛹</h2>
+        <div class="sub">⚡ TAP TO SPIN • NO REPEAT 🔥</div>
 
-<div class="slot-box">
-    <h2>🎰 SKATE SLOT 🛹</h2>
-    <div class="sub">⚡ DRAG TO SPIN • NO REPEAT 🔥</div>
+        <div class="slot" id="slot">
+            <div class="reel" id="reel1">🎲 READY</div>
+            <div class="reel" id="reel2">🎲 READY</div>
+        </div>
 
-    <div class="slot">
-        <div class="reel" id="reel1">🎲 READY</div>
-        <div class="reel" id="reel2">🎲 READY</div>
+        <button class="spin-btn" id="spinBtn">SPIN</button>
     </div>
-</div>
-
-<div class="lever-box">
-    <div class="lever-track">
-        <div class="hint">⬇️</div>
-        <div class="lever" id="lever"></div>
-    </div>
-</div>
-
 </div>
 
 <script>
-/* ===== DATA ===== */
+/* DATA */
 const tricks=[
 "Ollie","Fakie ollie","Front side 180","Half cab",
 "Fakie front side 180","Body varial revert fs",
 "Body varial revert bs","Push and jump revert",
-"Step off body varial","Step off revert front side",
-"Step off revert back side","360 kickturn",
+"Step off body varial","Step off revert fs",
+"Step off revert bs","360 kickturn",
 "No comply finger flip","Fakie no comply finger flip",
 "No comply 180","Pop shuv","Fakie pop shuv","No com shuv",
 "Power slide fs","Power slide bs",
@@ -184,81 +165,72 @@ const tricks=[
 "Manual","Fakie manual"
 ];
 
-const MAX_HISTORY=100;
 let history=[];
+const MAX_HISTORY=100;
 let spinning=false;
 
 /* AUDIO */
-const audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+let audioCtx=null;
+function initAudio(){
+    if(!audioCtx)
+        audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+    if(audioCtx.state==="suspended") audioCtx.resume();
+}
+
 function clack(){
+    if(!audioCtx) return;
     const o=audioCtx.createOscillator();
     const g=audioCtx.createGain();
     o.type="square";
-    o.frequency.value=900;
-    g.gain.setValueAtTime(.18,audioCtx.currentTime);
-    g.gain.exponentialRampToValueAtTime(.01,audioCtx.currentTime+.07);
-    o.connect(g);g.connect(audioCtx.destination);
-    o.start();o.stop(audioCtx.currentTime+.07);
+    o.frequency.value=180;
+    g.gain.setValueAtTime(.25,audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(.01,audioCtx.currentTime+.06);
+    o.connect(g); g.connect(audioCtx.destination);
+    o.start(); o.stop(audioCtx.currentTime+.06);
 }
 
 /* SPIN */
 function spin(){
     if(spinning) return;
     spinning=true;
+
     navigator.vibrate?.([20,30,20]);
 
     const r1=reel1,r2=reel2;
-
-    const t1=setInterval(()=>{
+    const timer=setInterval(()=>{
         r1.textContent=tricks[Math.random()*tricks.length|0];
+        r2.textContent=tricks[Math.random()*tricks.length|0];
         clack();
     },80);
 
-    const t2=setInterval(()=>{
-        r2.textContent=tricks[Math.random()*tricks.length|0];
-    },80);
-
-    setTimeout(()=>clearInterval(t1),800);
     setTimeout(()=>{
-        clearInterval(t2);
-
+        clearInterval(timer);
         let pair;
         do{
-            let a=Math.random()*tricks.length|0,b;
+            let a=Math.random()*tricks.length|0;
+            let b;
             do{b=Math.random()*tricks.length|0}while(a===b);
             pair=[tricks[a],tricks[b]].sort().join("||");
         }while(history.includes(pair));
 
         history.push(pair);
-        if(history.length>MAX_HISTORY)history.shift();
+        if(history.length>MAX_HISTORY) history.shift();
 
-        [r1.textContent,r2.textContent]=pair.split("||");
+        const [t,b]=pair.split("||");
+        r1.textContent=t;
+        r2.textContent=b;
+
+        slot.classList.add("flash");
+        setTimeout(()=>slot.classList.remove("flash"),350);
+
         spinning=false;
-    },1300);
+    },1200);
 }
 
-/* LEVER DRAG */
-const lever=document.getElementById("lever");
-let startY=0,drag=false;
-
-lever.addEventListener("pointerdown",e=>{
-    if(spinning) return;
-    drag=true;
-    startY=e.clientY;
-    lever.setPointerCapture(e.pointerId);
-});
-
-lever.addEventListener("pointermove",e=>{
-    if(!drag) return;
-    const y=Math.min(Math.max(e.clientY-startY,0),180);
-    lever.style.top=y+"px";
-});
-
-lever.addEventListener("pointerup",()=>{
-    if(!drag) return;
-    drag=false;
-    if(parseInt(lever.style.top)>120) spin();
-    lever.style.top="0";
+/* BUTTON */
+spinBtn.addEventListener("click",()=>{
+    initAudio(); // Safari unlock sound
+    spin();
 });
 </script>
 
