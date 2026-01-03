@@ -35,10 +35,13 @@ button {
 
 body{
     margin:0;
-    height:100vh;
+    min-height:100vh;
     display:flex;
     justify-content:center;
-    align-items:center;
+    align-items:flex-start;
+    padding:20px 0 40px;
+    overflow-y:auto;
+
     font-family:system-ui,-apple-system,sans-serif;
     background:
         radial-gradient(circle at top, rgba(0,255,180,.18), transparent 40%),
@@ -46,6 +49,7 @@ body{
         linear-gradient(180deg,#050505,#000);
     color:#dfffee;
 }
+
 
 .app{
     width:92%;
@@ -131,58 +135,86 @@ h2{
         0 4px 12px rgba(0,255,136,.5),
         inset 0 -1px 0 rgba(0,0,0,.4);
 }
+
+.checklist{
+    margin-top:18px;
+    padding:14px;
+    border-radius:16px;
+    background:rgba(0,0,0,.55);
+    box-shadow:inset 0 0 20px rgba(0,255,150,.12);
+}
+
+.checklist h3{
+    margin:0 0 10px;
+    font-size:15px;
+    letter-spacing:1px;
+    color:#7dffbf;
+}
+
+.trick-item{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:14px;
+    padding:6px 0;
+    border-bottom:1px solid rgba(0,255,136,.15);
+}
+
+.trick-item:last-child{border:none}
+
+.trick-item input{
+    accent-color:#00ff9c;
+    transform:scale(1.1);
+}
+
+.trick-done{
+    text-decoration:line-through;
+    opacity:.45;
+}
+
+
 </style>
 </head>
 
 <body>
 
 <div class="app">
-    <div class="slot-box">
-        <h2>🎰 SKATE SLOT 🛹</h2>
-        <div class="sub">⚡ TAP TO SPIN • NO REPEAT 🔥</div>
 
-        <div class="slot" id="slot">
-            <div class="reel" id="reel1">🎲 READY</div>
-            <div class="reel" id="reel2">🎲 READY</div>
-        </div>
+  <div class="slot-box">
+    <h2>🎰 SKATE SLOT 🛹</h2>
+    <div class="sub">⚡ TAP TO SPIN • NO REPEAT 🔥</div>
 
-        <button class="spin-btn" id="spinBtn">SPIN</button>
+    <div class="slot" id="slot">
+      <div class="reel" id="reel1">🎲 READY</div>
+      <div class="reel" id="reel2">🎲 READY</div>
     </div>
+
+    <button class="spin-btn" id="spinBtn">SPIN</button>
+  </div>
+
+  <!-- CHECKLIST -->
+  <div class="checklist">
+    <h3>📋 DAILY TRICKS</h3>
+    <div id="trickList"></div>
+  </div>
+
 </div>
+
 
 <script>
 /* DATA */
-const tricks = [
-  "Ollie",
-  "Fakie ollie",
-  "Front side 180",
-  "Half cab",
-  "Fakie front side 180",
-  "Body varial revert fs",
-  "Body varial revert bs",
-  "Push and jump revert",
-  "Step off body varial",
-  "Step off revert fs",
-  "Step off revert bs",
-  "360 kickturn",
-  "No comply finger flip",
-  "Fakie no comply finger flip",
-  "No comply 180",
-  "Pop shuv",
-  "Fakie pop shuv",
-  "No com shuv",
-  "No comply front shuv",
-  "Power slide fs",
-  "Power slide bs",
-  "Cave shuv",
-  "Cave",
-  "Boneless",
-  "Manual",
-  "Fakie manual",
-  "Ghost ride",
-  "Fakie catch"
+const tricks=[
+"Ollie","Fakie ollie","Front side 180","Half cab",
+"Fakie front side 180","Body varial revert fs",
+"Body varial revert bs","Push and jump revert",
+"Step off body varial","Step off revert fs",
+"Step off revert bs","360 kickturn",
+"No comply finger flip","Fakie no comply finger flip",
+"No comply 180","Pop shuv","Fakie pop shuv","No com shuv",
+"Power slide fs","Power slide bs",
+"Cave shuv","Cave","Boneless",
+"Manual","Fakie manual"
 ];
-
 
 let history=[];
 const MAX_HISTORY=100;
@@ -251,8 +283,57 @@ spinBtn.addEventListener("click",()=>{
     initAudio(); // Safari unlock sound
     spin();
 });
+
+/* DAILY CHECKLIST */
+const listEl = document.getElementById("trickList");
+const TODAY_KEY = "skate_day";
+const CHECK_KEY = "skate_done";
+
+function today(){
+    return new Date().toISOString().slice(0,10);
+}
+
+// reset mỗi ngày
+if(localStorage.getItem(TODAY_KEY) !== today()){
+    localStorage.setItem(TODAY_KEY, today());
+    localStorage.removeItem(CHECK_KEY);
+}
+
+let done = JSON.parse(localStorage.getItem(CHECK_KEY) || "[]");
+
+function renderList(){
+    listEl.innerHTML="";
+    tricks.forEach(trick=>{
+        const wrap=document.createElement("label");
+        wrap.className="trick-item";
+
+        const cb=document.createElement("input");
+        cb.type="checkbox";
+        cb.checked=done.includes(trick);
+
+        const span=document.createElement("span");
+        span.textContent=trick;
+        if(cb.checked) span.classList.add("trick-done");
+
+        cb.onchange=()=>{
+            if(cb.checked){
+                done.push(trick);
+                span.classList.add("trick-done");
+            }else{
+                done=done.filter(t=>t!==trick);
+                span.classList.remove("trick-done");
+            }
+            localStorage.setItem(CHECK_KEY,JSON.stringify(done));
+        };
+
+        wrap.append(cb,span);
+        listEl.appendChild(wrap);
+    });
+}
+
+renderList();
+
 </script>
 
 </body>
 </html>
-
