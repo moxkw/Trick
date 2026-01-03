@@ -180,6 +180,13 @@ h2{
     opacity:.9;
 }
 
+.trick-required{
+    color:#ff4d4d;
+    font-weight:600;
+    text-shadow:0 0 6px rgba(255,0,0,.6);
+}
+
+  
 </style>
 </head>
 
@@ -237,9 +244,16 @@ const tricks = [
   "Cave",
   "Boneless",
   "Manual",
-  "Fakie manual",
   "Ghost ride",
   "Fakie catch"
+];
+
+const REQUIRED_TRICKS = [
+  "Ollie",
+  "Fakie ollie",
+  "Front side 180",
+  "Half cab",
+  "No comply finger flip"
 ];
 
 
@@ -346,6 +360,12 @@ function renderList(){
 
         const span=document.createElement("span");
         span.textContent=trick;
+
+        // nếu nằm trong danh sách yêu cầu → tô đỏ
+        if(REQUIRED_TRICKS.includes(trick)){
+        span.classList.add("trick-required");
+        }
+        
         if(cb.checked) span.classList.add("trick-done");
 
         cb.onchange=()=>{
@@ -374,4 +394,5 @@ renderList();
 
 </body>
 </html>
+
 
