@@ -2,113 +2,91 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Skate Slot Pro</title>
+<title>Skate Slot Combo Mode</title>
 
 <style>
 *{
     box-sizing:border-box;
-    -webkit-tap-highlight-color:transparent;
-    touch-action:manipulation;
-}
-
-html,body{
     margin:0;
+    padding:0;
     font-family:system-ui,-apple-system,sans-serif;
-    background:
-        radial-gradient(circle at top, rgba(0,255,180,.15), transparent 40%),
-        radial-gradient(circle at bottom, rgba(255,120,0,.15), transparent 45%),
-        linear-gradient(180deg,#050505,#000);
-    color:white;
+    -webkit-tap-highlight-color:transparent;
 }
 
 body{
+    background:linear-gradient(180deg,#050505,#000);
     display:flex;
     justify-content:center;
     padding:30px 0;
+    color:white;
 }
 
 .app{
-    width:92%;
+    width:95%;
     max-width:420px;
 }
 
-.slot-box{
-    background:rgba(10,10,10,.9);
-    border-radius:26px;
+.box{
+    background:#0a0a0a;
     padding:22px;
+    border-radius:20px;
     text-align:center;
-    box-shadow:
-        0 0 0 1px rgba(0,255,150,.2),
-        0 20px 40px rgba(0,0,0,.8);
+    box-shadow:0 0 30px rgba(0,255,150,.15);
 }
 
 h2{
-    margin:0;
-    letter-spacing:2px;
-    color:#7dffbf;
-    text-shadow:0 0 14px rgba(0,255,136,.8);
+    margin-bottom:10px;
+    color:#00ff9c;
 }
 
 .sub{
-    margin:10px 0 18px;
+    opacity:.6;
     font-size:14px;
-    opacity:.7;
-}
-
-.slot{
-    background:#000;
-    border-radius:18px;
-    overflow:hidden;
-    border:1px solid rgba(0,255,136,.3);
+    margin-bottom:15px;
 }
 
 .reel{
-    height:75px;
+    height:70px;
     display:flex;
     align-items:center;
     justify-content:center;
-    font-size:18px;
-    padding:8px;
     border-bottom:1px solid rgba(255,255,255,.08);
+    font-size:18px;
     transition:.2s;
 }
 
-.reel:last-child{border:none}
+.reel:last-child{border:none;}
 
-.combo-arrow{
-    font-size:22px;
-    margin:8px 0;
-    opacity:.6;
-}
-
-/* COLOR FLOW */
 .type1{
     color:#00ff9c;
-    text-shadow:0 0 10px rgba(0,255,136,.8);
+    text-shadow:0 0 8px rgba(0,255,136,.8);
 }
 
 .type2{
     color:#ff7b00;
-    text-shadow:0 0 10px rgba(255,120,0,.9);
+    text-shadow:0 0 8px rgba(255,120,0,.9);
 }
 
-.spin-btn{
+.star{
+    font-weight:bold;
+    color:#ff4444;
+}
+
+button{
     margin-top:20px;
     width:100%;
-    height:56px;
-    font-size:20px;
-    font-weight:700;
+    height:55px;
     border:none;
-    border-radius:16px;
+    border-radius:14px;
+    font-size:18px;
+    font-weight:bold;
     background:linear-gradient(180deg,#00ff9c,#00c853);
     color:#003b22;
-    box-shadow:0 8px 20px rgba(0,255,136,.6);
 }
 
-.spin-btn:active{
+button:active{
     transform:translateY(2px);
 }
 </style>
@@ -117,85 +95,89 @@ h2{
 <body>
 
 <div class="app">
+<div class="box">
+<h2>🎰 SKATE SLOT 🛹</h2>
+<div class="sub">2–3 Trick Combo Mode</div>
 
-<div class="slot-box">
-    <h2>🎰 SKATE SLOT 🛹</h2>
-    <div class="sub">COMBO FLOW MODE 1 ↔ 2</div>
+<div id="slot"></div>
 
-    <div class="slot" id="slot">
-        <div class="reel" id="reel1">READY</div>
-        <div class="combo-arrow">⬇</div>
-        <div class="reel" id="reel2">READY</div>
-    </div>
+<button onclick="spin()">SPIN</button>
 
-    <button class="spin-btn" id="spinBtn">SPIN</button>
 </div>
-
 </div>
 
 <script>
 
 /* DATA */
 const tricks = [
-  { start:2, name:"Push & jump revert fs", end:1 },
-  { start:2, name:"Push & jump revert bs", end:1 },
-  { start:1, name:"Lift Revert fs", end:2 },
-  { start:1, name:"Lift Revert bs", end:2 },
-  { start:2, name:"Lift Revert fakie fs", end:1 },
-  { start:2, name:"Lift Revert fakie bs", end:1 },
-  { start:2, name:"Fakie 360 revert", end:2 },
-  { start:1, name:"Bone tailslide", end:1 },
-  { start:1, name:"No comply 180", end:2 },
-  { start:1, name:"Fs 180", end:2 },
-  { start:1, name:"Bs 180", end:2 },
-  { start:2, name:"Half cab", end:1 },
-  { start:2, name:"Fakie fs180", end:1 },
-  { start:1, name:"Finger flip", end:1 },
-  { start:1, name:"Ollie", end:1 },
-  { start:2, name:"Fakie ollie", end:2 },
-  { start:2, name:"Hippi jump revert", end:1 },
-  { start:1, name:"Ghost ride", end:1 }
+  {start:2,name:"Push & jump revert bs",end:1},
+  {start:2,name:"Fakie 360 revert",end:2},
+  {start:1,name:"Bone tailslide",end:1},
+  {start:1,name:"No comply 180",end:2},
+  {start:1,name:"Fs 180",end:2},
+  {start:1,name:"Bs 180",end:2},
+  {start:2,name:"Half cab",end:1},
+  {start:2,name:"Fakie fs180",end:1},
+  {start:1,name:"Finger flip",end:1},
+  {start:1,name:"Ollie",end:1},
+  {start:2,name:"Fakie ollie",end:2},
+  {start:2,name:"Hippi jump revert",end:1},
+  {start:1,name:"Ghost ride",end:1},
+  {start:1,name:"Step off revert",end:2,star:true},
+  {start:1,name:"Body varial",end:2,star:true}
 ];
 
 let spinning=false;
 
-/* SPIN LOGIC */
 function spin(){
-    if(spinning) return;
-    spinning=true;
 
-    const r1=document.getElementById("reel1");
-    const r2=document.getElementById("reel2");
+if(spinning) return;
+spinning=true;
 
-    const timer=setInterval(()=>{
-        const t1=tricks[Math.random()*tricks.length|0];
-        const t2=tricks[Math.random()*tricks.length|0];
-        r1.textContent=t1.name;
-        r2.textContent=t2.name;
-    },80);
+const slot=document.getElementById("slot");
+slot.innerHTML="";
 
-    setTimeout(()=>{
-        clearInterval(timer);
+let combo=[];
+let starCount=0;
 
-        let first=tricks[Math.random()*tricks.length|0];
-        let candidates=tricks.filter(t=>t.start===first.end);
-        if(candidates.length===0) candidates=tricks;
-        let second=candidates[Math.random()*candidates.length|0];
+// ===== TRICK 1 =====
+let first=tricks[Math.random()*tricks.length|0];
+combo.push(first);
+if(first.star) starCount++;
 
-        r1.textContent=first.name;
-        r2.textContent=second.name;
+// ===== TRICK 2 =====
+let secondPool=tricks.filter(t=>t.start===first.end);
+let second=secondPool[Math.random()*secondPool.length|0];
+combo.push(second);
+if(second.star) starCount++;
 
-        r1.className="reel type"+first.start;
-        r2.className="reel type"+second.start;
+// ===== DECIDE 3rd =====
+let allowThird=true;
 
-        spinning=false;
+if(starCount>=2) allowThird=false;
 
-    },1000);
+if(Math.random()<0.5) allowThird=false;
+
+if(allowThird){
+    let thirdPool=tricks.filter(t=>t.start===second.end);
+    if(thirdPool.length>0){
+        let third=thirdPool[Math.random()*thirdPool.length|0];
+        combo.push(third);
+    }
 }
 
-document.getElementById("spinBtn").addEventListener("click",spin);
+// ===== RENDER =====
+combo.forEach(trick=>{
+    const div=document.createElement("div");
+    div.className="reel type"+trick.start;
+    div.textContent=trick.name;
+    if(trick.star) div.classList.add("star");
+    slot.appendChild(div);
+});
+
+spinning=false;
+}
 
 </script>
-
 </body>
 </html>
