@@ -113,7 +113,8 @@ const tricks = [
   {start:1,name:"Ollie",end:1},
   {start:2,name:"Fakie ollie",end:2},
   {start:2,name:"Hippi jump revert",end:1},
-  {start:1,name:"Ghost ride",end:1}
+  {start:1,name:"Ghost ride",end:1},
+  {start:1,name:"Hippi jump",end:1}
 ];
 
 let spinning=false;
@@ -133,18 +134,26 @@ let first=tricks[Math.random()*tricks.length|0];
 combo.push(first);
 
 // ===== TRICK 2 =====
-let secondPool=tricks.filter(t=>t.start===first.end);
+let secondPool=tricks.filter(t=> 
+    t.start===first.end &&
+    !combo.includes(t)
+);
+
 if(secondPool.length===0){
     spinning=false;
     return;
 }
+
 let second=secondPool[Math.random()*secondPool.length|0];
 combo.push(second);
 
 // ===== 50% CHANCE ADD TRICK 3 =====
 if(Math.random()<0.5){
 
-    let thirdPool=tricks.filter(t=>t.start===second.end);
+    let thirdPool=tricks.filter(t=> 
+        t.start===second.end &&
+        !combo.includes(t)
+    );
 
     if(thirdPool.length>0){
         let third=thirdPool[Math.random()*thirdPool.length|0];
@@ -162,6 +171,7 @@ combo.forEach(trick=>{
 
 spinning=false;
 }
+
 
 </script>
 </body>
