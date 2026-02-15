@@ -151,19 +151,32 @@ let second=secondPool[Math.random()*secondPool.length|0];
 combo.push(second);
 if(second.star) starCount++;
 
-// ===== DECIDE 3rd =====
-let allowThird=true;
+// ===== DECIDE 3rd (random trước) =====
+let thirdPool=tricks.filter(t=>t.start===second.end);
 
-if(starCount>=2) allowThird=false;
+if(thirdPool.length>0 && Math.random()<0.5){
 
-if(Math.random()<0.5) allowThird=false;
+    let third=thirdPool[Math.random()*thirdPool.length|0];
 
-if(allowThird){
-    let thirdPool=tricks.filter(t=>t.start===second.end);
-    if(thirdPool.length>0){
-        let third=thirdPool[Math.random()*thirdPool.length|0];
+    // kiểm tra nếu thêm trick này sẽ thành 2 star
+    let futureStarCount = starCount + (third.star ? 1 : 0);
+
+    if(futureStarCount < 2){
         combo.push(third);
     }
+    // nếu = 2 thì KHÔNG thêm trick thứ 3
+}
+
+// ===== RENDER =====
+combo.forEach(trick=>{
+    const div=document.createElement("div");
+    div.className="reel type"+trick.start;
+    div.textContent=trick.name;
+    if(trick.star) div.classList.add("star");
+    slot.appendChild(div);
+});
+
+spinning=false;
 }
 
 // ===== RENDER =====
