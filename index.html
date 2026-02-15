@@ -3,8 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Skate Slot Combo Mode</title>
+<title>Skate Combo Random</title>
 
 <style>
 *{
@@ -12,14 +11,13 @@
     margin:0;
     padding:0;
     font-family:system-ui,-apple-system,sans-serif;
-    -webkit-tap-highlight-color:transparent;
 }
 
 body{
     background:linear-gradient(180deg,#050505,#000);
     display:flex;
     justify-content:center;
-    padding:30px 0;
+    padding:40px 0;
     color:white;
 }
 
@@ -30,7 +28,7 @@ body{
 
 .box{
     background:#0a0a0a;
-    padding:22px;
+    padding:24px;
     border-radius:20px;
     text-align:center;
     box-shadow:0 0 30px rgba(0,255,150,.15);
@@ -42,8 +40,8 @@ h2{
 }
 
 .sub{
-    opacity:.6;
     font-size:14px;
+    opacity:.6;
     margin-bottom:15px;
 }
 
@@ -54,7 +52,6 @@ h2{
     justify-content:center;
     border-bottom:1px solid rgba(255,255,255,.08);
     font-size:18px;
-    transition:.2s;
 }
 
 .reel:last-child{border:none;}
@@ -67,11 +64,6 @@ h2{
 .type2{
     color:#ff7b00;
     text-shadow:0 0 8px rgba(255,120,0,.9);
-}
-
-.star{
-    font-weight:bold;
-    color:#ff4444;
 }
 
 button{
@@ -97,12 +89,11 @@ button:active{
 <div class="app">
 <div class="box">
 <h2>🎰 SKATE SLOT 🛹</h2>
-<div class="sub">2–3 Trick Combo Mode</div>
+<div class="sub">Random 2–3 Trick Combo</div>
 
 <div id="slot"></div>
 
 <button onclick="spin()">SPIN</button>
-
 </div>
 </div>
 
@@ -122,9 +113,7 @@ const tricks = [
   {start:1,name:"Ollie",end:1},
   {start:2,name:"Fakie ollie",end:2},
   {start:2,name:"Hippi jump revert",end:1},
-  {start:1,name:"Ghost ride",end:1},
-  {start:1,name:"Step off revert",end:2,star:true},
-  {start:1,name:"Body varial",end:2,star:true}
+  {start:1,name:"Ghost ride",end:1}
 ];
 
 let spinning=false;
@@ -138,33 +127,29 @@ const slot=document.getElementById("slot");
 slot.innerHTML="";
 
 let combo=[];
-let starCount=0;
 
 // ===== TRICK 1 =====
 let first=tricks[Math.random()*tricks.length|0];
 combo.push(first);
-if(first.star) starCount++;
 
 // ===== TRICK 2 =====
 let secondPool=tricks.filter(t=>t.start===first.end);
+if(secondPool.length===0){
+    spinning=false;
+    return;
+}
 let second=secondPool[Math.random()*secondPool.length|0];
 combo.push(second);
-if(second.star) starCount++;
 
-// ===== DECIDE 3rd (random trước) =====
-let thirdPool=tricks.filter(t=>t.start===second.end);
+// ===== 50% CHANCE ADD TRICK 3 =====
+if(Math.random()<0.5){
 
-if(thirdPool.length>0 && Math.random()<0.5){
+    let thirdPool=tricks.filter(t=>t.start===second.end);
 
-    let third=thirdPool[Math.random()*thirdPool.length|0];
-
-    // kiểm tra nếu thêm trick này sẽ thành 2 star
-    let futureStarCount = starCount + (third.star ? 1 : 0);
-
-    if(futureStarCount < 2){
+    if(thirdPool.length>0){
+        let third=thirdPool[Math.random()*thirdPool.length|0];
         combo.push(third);
     }
-    // nếu = 2 thì KHÔNG thêm trick thứ 3
 }
 
 // ===== RENDER =====
@@ -172,19 +157,6 @@ combo.forEach(trick=>{
     const div=document.createElement("div");
     div.className="reel type"+trick.start;
     div.textContent=trick.name;
-    if(trick.star) div.classList.add("star");
-    slot.appendChild(div);
-});
-
-spinning=false;
-}
-
-// ===== RENDER =====
-combo.forEach(trick=>{
-    const div=document.createElement("div");
-    div.className="reel type"+trick.start;
-    div.textContent=trick.name;
-    if(trick.star) div.classList.add("star");
     slot.appendChild(div);
 });
 
