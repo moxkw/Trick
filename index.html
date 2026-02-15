@@ -4,52 +4,31 @@
 <meta charset="UTF-8">
 <meta name="viewport"
 content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<!-- PWA / iOS Fullscreen -->
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Skate Slot">
-
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#00ff88">
-
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icon_180x180.png">
 
 <title>Skate Slot Pro</title>
 
 <style>
-button, .spin-btn {
-  touch-action: manipulation;
-}
-
-button {
-  font-size: 16px;
-}
-
-
 *{
     box-sizing:border-box;
     -webkit-tap-highlight-color:transparent;
     touch-action:manipulation;
 }
 
-body{
+html,body{
     margin:0;
-    min-height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:flex-start;
-    padding:20px 0 40px;
-    overflow-y:auto;
-
     font-family:system-ui,-apple-system,sans-serif;
     background:
-        radial-gradient(circle at top, rgba(0,255,180,.18), transparent 40%),
-        radial-gradient(circle at bottom, rgba(0,120,255,.15), transparent 45%),
+        radial-gradient(circle at top, rgba(0,255,180,.15), transparent 40%),
+        radial-gradient(circle at bottom, rgba(255,120,0,.15), transparent 45%),
         linear-gradient(180deg,#050505,#000);
-    color:#dfffee;
+    color:white;
 }
 
+body{
+    display:flex;
+    justify-content:center;
+    padding:30px 0;
+}
 
 .app{
     width:92%;
@@ -57,18 +36,13 @@ body{
 }
 
 .slot-box{
-    background:rgba(10,10,10,.85);
+    background:rgba(10,10,10,.9);
     border-radius:26px;
-    padding:22px 18px;
+    padding:22px;
     text-align:center;
     box-shadow:
-        0 0 0 1px rgba(0,255,150,.15),
-        0 20px 40px rgba(0,0,0,.8),
-        inset 0 0 30px rgba(0,255,150,.08);
-}
-
-.home{ 
-    text-align:center; 
+        0 0 0 1px rgba(0,255,150,.2),
+        0 20px 40px rgba(0,0,0,.8);
 }
 
 h2{
@@ -79,118 +53,64 @@ h2{
 }
 
 .sub{
-    margin:8px 0 16px;
-    font-size:15px;
-    color:#9affd0;
-    opacity:.85;
+    margin:10px 0 18px;
+    font-size:14px;
+    opacity:.7;
 }
 
 .slot{
     background:#000;
     border-radius:18px;
-    border:1px solid rgba(0,255,136,.4);
     overflow:hidden;
-    box-shadow:inset 0 0 22px rgba(0,0,0,.9);
+    border:1px solid rgba(0,255,136,.3);
 }
 
 .reel{
-    height:70px;
+    height:75px;
     display:flex;
     align-items:center;
     justify-content:center;
-    font-size:22px;
-    border-bottom:1px solid rgba(0,255,136,.3);
+    font-size:18px;
+    padding:8px;
+    border-bottom:1px solid rgba(255,255,255,.08);
+    transition:.2s;
 }
 
 .reel:last-child{border:none}
 
-/* FLASH */
-.slot.flash{
-    animation:flash .35s ease-out;
+.combo-arrow{
+    font-size:22px;
+    margin:8px 0;
+    opacity:.6;
 }
 
-@keyframes flash{
-    0%{box-shadow:0 0 0 rgba(0,255,136,0)}
-    50%{box-shadow:0 0 40px rgba(0,255,136,1)}
-    100%{box-shadow:0 0 0 rgba(0,255,136,0)}
+/* COLOR FLOW */
+.type1{
+    color:#00ff9c;
+    text-shadow:0 0 10px rgba(0,255,136,.8);
 }
 
-/* BUTTON */
+.type2{
+    color:#ff7b00;
+    text-shadow:0 0 10px rgba(255,120,0,.9);
+}
+
 .spin-btn{
-    margin-top:18px;
+    margin-top:20px;
     width:100%;
     height:56px;
     font-size:20px;
     font-weight:700;
-    letter-spacing:2px;
     border:none;
     border-radius:16px;
-    background:
-        linear-gradient(180deg,#00ff9c,#00c853);
+    background:linear-gradient(180deg,#00ff9c,#00c853);
     color:#003b22;
-    box-shadow:
-        0 8px 20px rgba(0,255,136,.6),
-        inset 0 -3px 0 rgba(0,0,0,.35);
+    box-shadow:0 8px 20px rgba(0,255,136,.6);
 }
 
 .spin-btn:active{
     transform:translateY(2px);
-    box-shadow:
-        0 4px 12px rgba(0,255,136,.5),
-        inset 0 -1px 0 rgba(0,0,0,.4);
 }
-
-.checklist{
-    margin-top:18px;
-    padding:14px;
-    border-radius:16px;
-    background:rgba(0,0,0,.55);
-    box-shadow:inset 0 0 20px rgba(0,255,150,.12);
-}
-
-.checklist h3{
-    margin:0 0 10px;
-    font-size:15px;
-    letter-spacing:1px;
-    color:#7dffbf;
-}
-
-.trick-item{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    font-size:14px;
-    padding:6px 0;
-    border-bottom:1px solid rgba(0,255,136,.15);
-}
-
-.trick-item:last-child{border:none}
-
-.trick-item input{
-    accent-color:#00ff9c;
-    transform:scale(1.1);
-}
-
-.trick-done{
-    text-decoration:line-through;
-    opacity:.45;
-}
-
-.progress{
-    margin-bottom:8px;
-    font-size:14px;
-    letter-spacing:1px;
-    color:#9affd0;
-    opacity:.9;
-}
-
-.trick-required{
-    color:#ff4d4d;
-    font-weight:600;
-    text-shadow:0 0 6px rgba(255,0,0,.6);
-}
-
-  
 </style>
 </head>
 
@@ -198,202 +118,84 @@ h2{
 
 <div class="app">
 
-  <div class="slot-box">
+<div class="slot-box">
     <h2>🎰 SKATE SLOT 🛹</h2>
-    <div class="sub">⚡ TAP TO SPIN • NO REPEAT 🔥</div>
+    <div class="sub">COMBO FLOW MODE 1 ↔ 2</div>
 
     <div class="slot" id="slot">
-      <div class="reel" id="reel1">🎲 READY</div>
-      <div class="reel" id="reel2">🎲 READY</div>
+        <div class="reel" id="reel1">READY</div>
+        <div class="combo-arrow">⬇</div>
+        <div class="reel" id="reel2">READY</div>
     </div>
 
     <button class="spin-btn" id="spinBtn">SPIN</button>
-  </div>
-  
-  <!-- HOME -->
-  <div class="home">
-    <h3>Hippi jump 🏠 Pivot</h3>
-  </div>
-  
-  <!-- CHECKLIST -->
-  <div class="checklist">
-    <h3>📋 DAILY TRICKS</h3>
-    <div class="progress" id="progressText">0 / 0</div>
-    <div id="trickList"></div>
-  </div>
+</div>
 
 </div>
 
-
 <script>
+
 /* DATA */
 const tricks = [
-  "Ollie",
-  "Fakie ollie",
-  "Front side 180",
-  "Half cab",
-  "Body varial revert bs",
-  "Push and jump revert",
-  "Step off revert fs",
-  "360 kickturn",
-  "No comply finger flip",
-  "Fakie no comply finger flip",
-  "No comply 180",
-  "Pop shuv",
-  "Fakie pop shuv",
-  "Fakie no comply shuv",
-  "No comply front shuv",
-  "Power slide fs",
-  "Power slide bs",
-  "Boneless",
-  "Ghost ride"
+  { start:2, name:"Push & jump revert fs", end:1 },
+  { start:2, name:"Push & jump revert bs", end:1 },
+  { start:1, name:"Lift Revert fs", end:2 },
+  { start:1, name:"Lift Revert bs", end:2 },
+  { start:2, name:"Lift Revert fakie fs", end:1 },
+  { start:2, name:"Lift Revert fakie bs", end:1 },
+  { start:2, name:"Fakie 360 revert", end:2 },
+  { start:1, name:"Bone tailslide", end:1 },
+  { start:1, name:"No comply 180", end:2 },
+  { start:1, name:"Fs 180", end:2 },
+  { start:1, name:"Bs 180", end:2 },
+  { start:2, name:"Half cab", end:1 },
+  { start:2, name:"Fakie fs180", end:1 },
+  { start:1, name:"Finger flip", end:1 },
+  { start:1, name:"Ollie", end:1 },
+  { start:2, name:"Fakie ollie", end:2 },
+  { start:2, name:"Hippi jump revert", end:1 },
+  { start:1, name:"Ghost ride", end:1 }
 ];
 
-const REQUIRED_TRICKS = [
-  "Ollie",
-  "Fakie ollie",
-  "Front side 180",
-  "Half cab",
-  "No comply finger flip"
-];
-
-
-let history=[];
-const MAX_HISTORY=100;
 let spinning=false;
 
-/* AUDIO */
-let audioCtx=null;
-function initAudio(){
-    if(!audioCtx)
-        audioCtx=new (window.AudioContext||window.webkitAudioContext)();
-    if(audioCtx.state==="suspended") audioCtx.resume();
-}
-
-function clack(){
-    if(!audioCtx) return;
-    const o=audioCtx.createOscillator();
-    const g=audioCtx.createGain();
-    o.type="square";
-    o.frequency.value=180;
-    g.gain.setValueAtTime(.25,audioCtx.currentTime);
-    g.gain.exponentialRampToValueAtTime(.01,audioCtx.currentTime+.06);
-    o.connect(g); g.connect(audioCtx.destination);
-    o.start(); o.stop(audioCtx.currentTime+.06);
-}
-
-/* SPIN */
+/* SPIN LOGIC */
 function spin(){
     if(spinning) return;
     spinning=true;
 
-    navigator.vibrate?.([20,30,20]);
+    const r1=document.getElementById("reel1");
+    const r2=document.getElementById("reel2");
 
-    const r1=reel1,r2=reel2;
     const timer=setInterval(()=>{
-        r1.textContent=tricks[Math.random()*tricks.length|0];
-        r2.textContent=tricks[Math.random()*tricks.length|0];
-        clack();
+        const t1=tricks[Math.random()*tricks.length|0];
+        const t2=tricks[Math.random()*tricks.length|0];
+        r1.textContent=t1.name;
+        r2.textContent=t2.name;
     },80);
 
     setTimeout(()=>{
         clearInterval(timer);
-        let pair;
-        do{
-            let a=Math.random()*tricks.length|0;
-            let b;
-            do{b=Math.random()*tricks.length|0}while(a===b);
-            pair=[tricks[a],tricks[b]].sort().join("||");
-        }while(history.includes(pair));
 
-        history.push(pair);
-        if(history.length>MAX_HISTORY) history.shift();
+        let first=tricks[Math.random()*tricks.length|0];
+        let candidates=tricks.filter(t=>t.start===first.end);
+        if(candidates.length===0) candidates=tricks;
+        let second=candidates[Math.random()*candidates.length|0];
 
-        const [t,b]=pair.split("||");
-        r1.textContent=t;
-        r2.textContent=b;
+        r1.textContent=first.name;
+        r2.textContent=second.name;
 
-        slot.classList.add("flash");
-        setTimeout(()=>slot.classList.remove("flash"),350);
+        r1.className="reel type"+first.start;
+        r2.className="reel type"+second.start;
 
         spinning=false;
-    },1200);
+
+    },1000);
 }
 
-/* BUTTON */
-spinBtn.addEventListener("click",()=>{
-    initAudio(); // Safari unlock sound
-    spin();
-});
-
-/* DAILY CHECKLIST */
-const listEl = document.getElementById("trickList");
-const progressEl = document.getElementById("progressText");
-
-const TODAY_KEY = "skate_day";
-const CHECK_KEY = "skate_done";
-
-function today(){
-    return new Date().toISOString().slice(0,10);
-}
-
-// reset mỗi ngày
-if(localStorage.getItem(TODAY_KEY) !== today()){
-    localStorage.setItem(TODAY_KEY, today());
-    localStorage.removeItem(CHECK_KEY);
-}
-
-let done = JSON.parse(localStorage.getItem(CHECK_KEY) || "[]");
-
-function updateProgress(){
-    progressEl.textContent = `${done.length} / ${tricks.length}`;
-}
-
-function renderList(){
-    listEl.innerHTML="";
-    tricks.forEach(trick=>{
-        const label=document.createElement("label");
-        label.className="trick-item";
-
-        const cb=document.createElement("input");
-        cb.type="checkbox";
-        cb.checked=done.includes(trick);
-
-        const span=document.createElement("span");
-        span.textContent=trick;
-
-        // nếu nằm trong danh sách yêu cầu → tô đỏ
-        if(REQUIRED_TRICKS.includes(trick)){
-        span.classList.add("trick-required");
-        }
-        
-        if(cb.checked) span.classList.add("trick-done");
-
-        cb.onchange=()=>{
-            if(cb.checked){
-                if(!done.includes(trick)) done.push(trick);
-                span.classList.add("trick-done");
-            }else{
-                done = done.filter(t=>t!==trick);
-                span.classList.remove("trick-done");
-            }
-            localStorage.setItem(CHECK_KEY,JSON.stringify(done));
-            updateProgress();
-        };
-
-        label.append(cb,span);
-        listEl.appendChild(label);
-    });
-
-    updateProgress();
-}
-
-renderList();
-
+document.getElementById("spinBtn").addEventListener("click",spin);
 
 </script>
 
 </body>
 </html>
-
-
